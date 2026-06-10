@@ -1,3 +1,8 @@
+
+/*pedro jose leon alzamora 
+0222520028*/
+
+
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -295,6 +300,100 @@ void listarCarrito(int idUsuario) {
 }
 
 
+// a. Los 5 productos con menor stock, ordenados de forma ascendente
+void top5MenorStock() {
+    vector<Producto> copia = productos;
+
+    // Ordenar por stock ascendente (burbuja simple)
+    for (int i = 0; i < copia.size() - 1; i++) {
+        for (int j = 0; j < copia.size() - i - 1; j++) {
+            if (copia[j].stock > copia[j+1].stock) {
+                Producto temp = copia[j];
+                copia[j] = copia[j+1];
+                copia[j+1] = temp;
+            }
+        }
+    }
+
+    cout << "\n--- Top 5 productos con menor stock ---\n";
+    cout << "ID\tNombre\t\t\tStock\n";
+    cout << "----------------------------------------------\n";
+    for (int i = 0; i < 5 && i < copia.size(); i++) {
+        cout << copia[i].idProducto << "\t"
+             << copia[i].nombre << "\t\t"
+             << copia[i].stock << endl;
+    }
+}
+
+// b. Cantidad de comentarios en una fecha exacta
+void cantidadComentariosPorFecha() {
+    string fecha;
+    cout << "Ingrese fecha (YYYY-MM-DD): ";
+    cin >> fecha;
+
+    int cantidad = 0;
+    for (int i = 0; i < comentarios.size(); i++) {
+        if (comentarios[i].fecha == fecha) {
+            cantidad++;
+        }
+    }
+
+    cout << "\n--- Comentarios por fecha ---\n";
+    cout << "Fecha\t\tCantidad de comentarios\n";
+    cout << "----------------------------------------------\n";
+    cout << fecha << "\t" << cantidad << endl;
+}
+
+// c. Precio maximo y minimo de los productos
+void precioMaximoMinimo() {
+    if (productos.empty()) {
+        cout << "No hay productos cargados.\n";
+        return;
+    }
+
+    double precioMax = productos[0].precio;
+    double precioMin = productos[0].precio;
+    string nombreMax = productos[0].nombre;
+    string nombreMin = productos[0].nombre;
+
+    for (int i = 1; i < productos.size(); i++) {
+        if (productos[i].precio > precioMax) {
+            precioMax = productos[i].precio;
+            nombreMax = productos[i].nombre;
+        }
+        if (productos[i].precio < precioMin) {
+            precioMin = productos[i].precio;
+            nombreMin = productos[i].nombre;
+        }
+    }
+
+    cout << "\n--- Precio maximo y minimo ---\n";
+    cout << "Precio maximo: $" << precioMax << " (" << nombreMax << ")\n";
+    cout << "Precio minimo: $" << precioMin << " (" << nombreMin << ")\n";
+}
+
+// Submenu de reportes
+void menuReportes() {
+    int opcion;
+    do {
+        cout << "\n--- REPORTES ---\n";
+        cout << "1. Top 5 productos con menor stock\n";
+        cout << "2. Cantidad de comentarios por fecha\n";
+        cout << "3. Precio maximo y minimo\n";
+        cout << "0. Volver al menu principal\n";
+        cout << "Opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1: top5MenorStock(); break;
+            case 2: cantidadComentariosPorFecha(); break;
+            case 3: precioMaximoMinimo(); break;
+            case 0: break;
+            default: cout << "Opcion invalida\n";
+        }
+    } while (opcion != 0);
+}
+
 int main() {
 
     cargarUsuarios();
@@ -317,6 +416,7 @@ int main() {
         cout << "3. Listar usuarios\n";
         cout << "4. Agregar producto al carrito\n";
         cout << "5. Ver carrito\n";
+        cout << "6. Reportes\n";
         cout << "0. Salir\n";
 
         cin >> opcion;
@@ -327,6 +427,7 @@ int main() {
             case 3: listarUsuarios(); break;
             case 4: agregarProducto(idUsuario); break;
             case 5: listarCarrito(idUsuario); break;
+            case 6: menuReportes(); break;
         }
 
     } while (opcion != 0);
